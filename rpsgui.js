@@ -1,216 +1,145 @@
-Game()
+let computerScore = 0;
+let playerScore = 0;
 
-function Game() {
+const btnRock = document.querySelector('#btnRock');
+const btnPaper = document.querySelector('#btnPaper');
+const btnScissors = document.querySelector('#btnScissors');
 
-    // initialize variables
-    let computerScore = 0
-    let playerScore = 0
+// add event listeners
+btnRock.addEventListener('click', () => {
+    GameRound("rock");    
+});
+btnPaper.addEventListener('click', () => {
+    GameRound("paper");
+});
+btnScissors.addEventListener('click', () => {
+    GameRound("scissors");
+});
+
+function GameRound(playerChoice){
     
-    // game loop
-    for (let round = 0; round < 5; round++){
+    // let the computer take its turn and determine a winner
+    let computerChoice = ComputerTurn();
+    let winner = DetermineWinner(playerChoice, computerChoice);
 
-        // begin the game round
-        let roundWinner = GameRound()
-        
-        // increment scores based on round winner
-        switch (roundWinner) {
+    // update score
+    if (winner == "player") { playerScore++; }
+    if (winner == "computer") { computerScore++; }
 
-            case "player":
-                console.log("The PLAYER has won this round!")
-                playerScore++
-                break
+    UpdateStatus(playerChoice, computerChoice, winner);
+    
+}
 
-            case "computer":
-                console.log("The COMPUTER has won this round!")
-                computerScore++
-                break
-            case "tie":
-                console.log("It's a TIE!")
-        }
+function UpdateStatus(playerChoice, computerChoice, winner) {
+    
+    const statusText = document.querySelector('#statusText');
+    const scoreText = document.querySelector('#scoreText');
 
-    }
-
-    // after five rounds, determine winner & announce
-
-    console.log("GAME OVER! THE SCORE IS:")
-    console.log("PLAYER: " + playerScore)
-    console.log("COMPUTER: " + computerScore)
-
-    if (computerScore > playerScore){
-
-        console.log("The COMPUTER has won the game!")
-
-    } else if (computerScore < playerScore){
-
-        console.log("The PLAYER has won the game!")
-
+    if (winner != "tie") {
+        statusText.textContent = `The player chose ${playerChoice}, the computer
+            chose ${computerChoice}! The ${winner} wins!`;
     } else {
-
-        console.log("It's a DRAW! No one wins!")
-
+        statusText.textContent = `The player and the computer BOTH
+            chose ${playerChoice}! It's a TIE!`;
     }
-    
-}
 
-function GameRound() {
+    scoreText.textContent = `Player: ${playerScore} | 
+        Computer: ${computerScore}`;
 
-    //initialize variables
-    let winner = 0
-    let playerChoice = 0
-    let computerChoice = 0
-    let validChoice = false
-
-    // get user's choice
-    while (validChoice == false){
-    
-        playerChoice = PromptPlayer()
-
-        // check to make sure the player has entered a valid choice
-        // (only rock, paper or scissors)
-
-        if (playerChoice == "rock") {
-
-            console.log ("You have chosen ROCK!")
-            validChoice = true
-
-        } else if (playerChoice == "paper"){
-
-            console.log("You have chosen PAPER!")
-            validChoice = true
-
-        } else if (playerChoice == "scissors"){
-
-            console.log("You have chosen SCISSORS!")
-            validChoice = true
-
-        } else {
-
-            console.log("You can only choose rock, paper or scissors. Try again.")
-        
-        }
-
-
-    }
-    
-    // now it's the computer's turn
-    computerChoice = ComputerTurn()
-
-    // determine winner and return
-    return DetermineRoundWinner(playerChoice, computerChoice)
-
-}
-
-function PromptPlayer(){
-
-    // Prompt user to choose rock/paper/scissors, then convert to lower case
-    let userInput = prompt("Rock, Paper or Scissors?")
-    userInput = userInput.toLowerCase()
-
-    // return value
-    return userInput
 }
 
 function ComputerTurn(){
 
     // initialize variables
-    let randomNumber = 0
-    let choiceToReturn = 0
+    let randomNumber = 0;
+    let choiceToReturn = 0;
 
     // the computer will randomly choose (0)rock, (1)paper or (2)scissors
     // and then will return the value (rock, paper or scissors)
 
     // pick a number between 0 and 2
-    randomNumber = Math.floor(Math.random() * Math.floor(3))
+    randomNumber = Math.floor(Math.random() * Math.floor(3));
 
     // 0 = paper, 1 = rock, 2 = scissors
     switch (randomNumber){
         
         case 0:
-        choiceToReturn = "paper"
-        console.log("The computer has chosen PAPER!")
-        break
+        choiceToReturn = "paper";      
+        break;
 
         case 1:
-        choiceToReturn = "rock"
-        console.log("The computer has chosen ROCK!")
-        break
+        choiceToReturn = "rock";
+        break;
 
         case 2:
-        choiceToReturn = "scissors"
-        console.log("The computer has chosen SCISSORS!")
+        choiceToReturn = "scissors";
 
     }
 
     // return the computer's choice
-    return choiceToReturn
+    return choiceToReturn;
 
 }
 
-function DetermineRoundWinner(playerChoice, computerChoice) {
+function DetermineWinner(playerChoice, computerChoice) {
 
-    // compare player choice and computer choice to determine winner
-    // return winner ("player", "computer", or "tie")
-
-    let winnner = 0
+    let winner = 0;
 
     if (playerChoice == "paper"){
 
         switch (computerChoice){
 
             case "rock":
-            winner = "player"
-            break
+            winner = "player";
+            break;
 
             case "paper":
-            winner = "tie"
-            break
+            winner = "tie";
+            break;
 
             case "scissors":
-            winner = "computer"
+            winner = "computer";
         }
 
-        return winner
+        return winner;
+
 
     } else if (playerChoice == "rock"){
 
         switch (computerChoice){
 
             case "rock":
-            winner = "tie"
-            break
+            winner = "tie";
+            break;
 
             case "paper":
-            winner = "computer"
-            break
+            winner = "computer";
+            break;
 
             case "scissors":
-            winner = "player"
+            winner = "player";
         }
 
-        return winner
+        return winner;
 
     } else if (playerChoice == "scissors") {
 
         switch (computerChoice){
 
             case "rock":
-            winner = "computer"
-            break
+            winner = "computer";
+            break;
 
             case "paper":
-            winner = "player"
-            break
+            winner = "player";
+            break;
 
             case "scissors":
-            winner = "tie"
+            winner = "tie";
         }
 
-        return winner
+        return winner;
+        
 
-    } else {
-
-        // this shouldn't happen. tell me where the fault occurred. 
-        console.log("Invalid input in function DetermineRoundWinner")
-        return 1
     }
 }
