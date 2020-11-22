@@ -5,7 +5,6 @@ const btnRock = document.querySelector('#btnRock');
 const btnPaper = document.querySelector('#btnPaper');
 const btnScissors = document.querySelector('#btnScissors');
 
-// add event listeners
 btnRock.addEventListener('click', () => {
     GameRound("rock");    
 });
@@ -26,8 +25,66 @@ function GameRound(playerChoice){
     if (winner == "player") { playerScore++; }
     if (winner == "computer") { computerScore++; }
 
-    UpdateStatus(playerChoice, computerChoice, winner);
+    // update the status screen
+    if (playerScore < 5 && computerScore < 5){ 
+        UpdateStatus(playerChoice, computerChoice, winner);
+        return; 
+    }
     
+    GameOver();
+    
+}
+
+function GameOver(){
+
+    const statusText = document.querySelector('#statusText');
+    const scoreText = document.querySelector('#scoreText');
+    const controls = document.querySelector('#controls');
+    let winner = 0;
+
+    // disable game controls
+    btnRock.disabled = true;
+    btnPaper.disabled = true;
+    btnScissors.disabled = true;
+
+    // who won?
+    if (playerScore > computerScore) { winner = "The Player"; }
+    else { winner = "The Computer"; }
+    
+    statusText.textContent = 'GAME OVER'
+    scoreText.textContent = `${winner} wins!`
+
+    // show new game button
+    const resetButton = document.createElement('button');
+    resetButton.id = "btnReset"
+    resetButton.textContent = "New Game";
+    resetButton.addEventListener('click', () => {
+        RestartGame();
+    });
+    controls.appendChild(resetButton);
+
+}
+
+function RestartGame(){
+
+    const statusText = document.querySelector('#statusText');
+    const scoreText = document.querySelector('#scoreText');
+    const btnReset = document.getElementById('btnReset');
+    playerScore = 0;
+    computerScore = 0;
+    
+    // destroy new game button
+    btnReset.parentNode.removeChild(btnReset);
+
+    // enable game controls
+    btnRock.disabled = false;
+    btnPaper.disabled = false;
+    btnScissors.disabled = false;
+
+    // reset status & score text
+    statusText.textContent = "Choose Rock, Paper or Scissors!";
+    scoreText.textContent = "Player: 0 | Computer: 0";    
+
 }
 
 function UpdateStatus(playerChoice, computerChoice, winner) {
@@ -50,17 +107,14 @@ function UpdateStatus(playerChoice, computerChoice, winner) {
 
 function ComputerTurn(){
 
-    // initialize variables
     let randomNumber = 0;
     let choiceToReturn = 0;
 
     // the computer will randomly choose (0)rock, (1)paper or (2)scissors
     // and then will return the value (rock, paper or scissors)
 
-    // pick a number between 0 and 2
     randomNumber = Math.floor(Math.random() * Math.floor(3));
 
-    // 0 = paper, 1 = rock, 2 = scissors
     switch (randomNumber){
         
         case 0:
@@ -76,7 +130,6 @@ function ComputerTurn(){
 
     }
 
-    // return the computer's choice
     return choiceToReturn;
 
 }
